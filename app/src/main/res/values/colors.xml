@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC6</color>
+    <color name="buttonColor1">#FF5722</color> <!-- Цвет кнопок -->
+    <color name="buttonColor2">#2A2A37</color> <!-- Цвет кнопок -->
+    <color name="textColorWhite">#FFFFFF</color> <!-- Белый цвет для текста -->
+    <color name="hintColor">#94949B</color> <!-- Цвет подписей к текстовым полям -->
+    <color name="borderColor">#000000</color> <!-- Цвет границы текстовых полей -->
+    <color name="transparentWhite">#A46CE3F4</color> <!-- Прозрачно-белый цвет -->
 </resources>
+
