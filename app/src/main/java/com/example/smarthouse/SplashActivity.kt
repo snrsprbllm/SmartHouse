@@ -1,5 +1,6 @@
 package com.example.smarthouse
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -22,13 +23,25 @@ class SplashActivity : AppCompatActivity() {
 
         // Задержка перед переходом на следующий экран
         Handler().postDelayed({
-            // Переход на RegistrationActivity
-            val intent = Intent(this, RegistrationActivity::class.java)
-            startActivity(intent)
+            // Проверка на наличие пин-кода и регистрации
+            val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
+            val isRegistered = sharedPreferences.getBoolean("isRegistered", false)
+            val savedPinCode = sharedPreferences.getString("pin_code", null)
+
+            if (isRegistered && savedPinCode != null) {
+                // Если пользователь зарегистрирован и есть пин-код, переходим на PinCodeActivity
+                val intent = Intent(this, PinCodeActivity::class.java)
+                startActivity(intent)
+            } else if (isRegistered) {
+                // Если пользователь зарегистрирован, но нет пин-кода, переходим на PinCodeActivity
+                val intent = Intent(this, PinCodeActivity::class.java)
+                startActivity(intent)
+            } else {
+                // Иначе переходим на RegistrationActivity
+                val intent = Intent(this, RegistrationActivity::class.java)
+                startActivity(intent)
+            }
             finish()
         }, 4000) // 4000 миллисекунд = 4 секунды
     }
 }
-
-
-//ЕСЛИ ЗАПУСК НЕ ПЕРВЫЙ, ТО НУЖНО ДОДЕЛАТЬ ЧТОБЫ КИДАЛО НА ВВОД ПИНКОДА

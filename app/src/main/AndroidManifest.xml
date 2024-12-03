@@ -4,14 +4,23 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/houseloadimage"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/houseloadimage"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHouse">
         <activity
+            android:name=".PinCodeActivity"
+            android:exported="false"
+            android:theme="@style/SplashTheme"/>
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/SplashTheme" />
+        <activity
             android:name=".RegistrationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".SplashActivity"
             android:exported="true"

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundimage">
+
+    <ImageView
+        android:id="@+id/houseIcon"
+        android:layout_width="250px"
+        android:layout_height="250px"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="64dp"
+        android:src="@drawable/houseicon" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houseIcon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Создайте пин-код"
+        android:textColor="@color/textColorWhite"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/indicatorsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/indicator1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/indicator_empty"
+            android:layout_margin="8dp" />
+
+        <ImageView
+            android:id="@+id/indicator2"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/indicator_empty"
+            android:layout_margin="8dp" />
+
+        <ImageView
+            android:id="@+id/indicator3"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/indicator_empty"
+            android:layout_margin="8dp" />
+
+        <ImageView
+            android:id="@+id/indicator4"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/indicator_empty"
+            android:layout_margin="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@drawable/text_rounded"
+        android:id="@+id/buttonsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/indicatorsContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="48dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button1"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="1"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button2"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="2"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button3"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="3"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button4"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="4"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button5"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="5"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button6"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="6"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button7"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="7"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button8"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="8"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button9"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="9"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/transparent"
+                android:strokeColor="@color/black"
+                android:layout_margin="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/exitButton"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:text="Выйти"
+        android:textColor="@color/textColorWhite"
+        android:textStyle="bold"
+        android:background="@drawable/button_rounded"
+        app:backgroundTint="@color/buttonColor2"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:layout_below="@id/buttonsContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+</RelativeLayout>

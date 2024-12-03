@@ -36,7 +36,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.cardview)  // Добавьте эту строку
     implementation(libs.androidx.appcompat)
@@ -46,4 +45,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Supabase Kotlin Client
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:0.7.5")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:0.7.5")
+    implementation("io.github.jan-tennert.supabase:storage-kt:0.7.5")
+    implementation("io.github.jan-tennert.supabase:realtime-kt:0.7.5")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }
