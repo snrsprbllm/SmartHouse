@@ -1,6 +1,5 @@
 package com.example.smarthouse
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.providers.builtin.Email
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -19,6 +24,8 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var registerButton: Button
     private lateinit var loginButton: Button
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +41,32 @@ class RegistrationActivity : AppCompatActivity() {
 
         registerButton.setOnClickListener {
             if (validateFields()) {
-                // Здесь будет код для регистрации через сервер
-                // Пока что просто сохраняем флаг регистрации
-                val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
-                sharedPreferences.edit().putBoolean("isRegistered", true).apply()
+                val username = usernameLayout.editText?.text.toString().trim()
+                val email = emailLayout.editText?.text.toString().trim()
+                val password = passwordLayout.editText?.text.toString().trim()
 
-                Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, PinCodeActivity::class.java))
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        SB.getSb().auth.signUpWith(Email,password) {
+                           this.email = email
+                           this.password = password
+
+                       }
+                        val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
+
+                        withContext(Dispatchers.Main) {
+                            val sharedPreferences = getSharedPreferences("SmartHomePrefs", MODE_PRIVATE)
+                            sharedPreferences.edit().putBoolean("isRegistered", true).apply()
+
+                            Toast.makeText(this@RegistrationActivity, "Регистрация успешна", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@RegistrationActivity, PinCodeActivity::class.java))
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@RegistrationActivity, "Ошибка регистрации: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             } else {
                 Toast.makeText(this, "Ошибка валидации", Toast.LENGTH_SHORT).show()
             }
@@ -135,5 +161,4 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 }
-
 //Доделать флаги с переходом на вход, создание кода и т.д

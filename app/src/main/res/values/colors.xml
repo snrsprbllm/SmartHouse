@@ -11,5 +11,9 @@
     <color name="hintColor">#94949B</color> <!-- Цвет подписей к текстовым полям -->
     <color name="borderColor">#000000</color> <!-- Цвет границы текстовых полей -->
     <color name="transparentWhite">#A46CE3F4</color> <!-- Прозрачно-белый цвет -->
+    <color name="button_color">#0B50A0</color> <!-- Цвет кнопки с экрана адреса -->
+    <color name="transparent">#000B50A0</color> <!-- Прозрачный -->
+
+
 </resources>
 

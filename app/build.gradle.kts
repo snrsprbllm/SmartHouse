@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    kotlin("plugin.serialization") version "1.4.0"
 }
 
 android {
@@ -37,7 +38,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation(libs.cardview)  // Добавьте эту строку
+    implementation(libs.cardview)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
@@ -47,12 +48,14 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Supabase Kotlin Client
-    implementation("io.github.jan-tennert.supabase:gotrue-kt:0.7.5")
-    implementation("io.github.jan-tennert.supabase:postgrest-kt:0.7.5")
-    implementation("io.github.jan-tennert.supabase:storage-kt:0.7.5")
-    implementation("io.github.jan-tennert.supabase:realtime-kt:0.7.5")
+    implementation(platform("io.github.jan-tennert.supabase:bom:2.2.3"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt")
+    implementation("io.github.jan-tennert.supabase:realtime-kt")
+    implementation ("io.ktor:ktor-client-cio:2.0.0")
 
-    // Coroutines
+
+    // Coroutines)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

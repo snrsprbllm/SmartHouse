@@ -98,7 +98,7 @@ class PinCodeActivity : AppCompatActivity() {
         sharedPreferences.edit().putString(PIN_CODE_KEY, pinCode).apply()
         pinCode = ""
         updateIndicators()
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, AddressInputActivity::class.java))
         finish()
     }
 
