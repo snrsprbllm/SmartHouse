@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,25 +16,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 import java.util.regex.Pattern
+import kotlin.random.Random
 
 class AddressInputActivity : AppCompatActivity() {
 
     private lateinit var addressLayout: TextInputLayout
     private lateinit var saveButton: Button
-/*
-    private val supabaseUrl = "https://afgslxlqfpbpctunvood.supabase.co"
-    private val supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmZ3NseGxxZnBicGN0dW52b29kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMxMjQzMzMsImV4cCI6MjA0ODcwMDMzM30.FctIeU0yl4iOYEmdi-Snx5h41-IC6IRQc_7KY_KJulw"
-
-    private val supabaseClient by lazy {
-        createSupabaseClient(
-            supabaseUrl = supabaseUrl,
-            supabaseKey = supabaseKey
-        ) {
-            install(Auth)
-            install(Postgrest)
-        }
-    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +42,9 @@ class AddressInputActivity : AppCompatActivity() {
                 Toast.makeText(this, "Пожалуйста, введите корректный адрес", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Проверка авторизации пользователя
+        checkUserAuthentication()
     }
 
     private fun setupTextWatcher() {
@@ -79,15 +72,51 @@ class AddressInputActivity : AppCompatActivity() {
         }
     }
 
+    private fun generateRandomHomeId(): Int {
+        return Random.nextInt(100000, 999999) // Генерируем случайное число от 100000 до 999999
+    }
+
     private fun saveAddress(address: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Получаем текущего пользователя
                 val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
                     ?: throw Exception("Пользователь не авторизован")
 
-                // Обновляем адрес пользователя в базе данных
-                val response = SB.getSb().postgrest["users"]
+                // Генерируем случайный UUID для идентификатора дома
+                val homeId = generateRandomHomeId()
+
+                // Проверяем, существует ли уже запись в таблице homes для данного пользователя
+                val homeExists = SB.getSb().postgrest["homes"]
+                    .select {
+                        filter {
+                            eq("user_id", user.id)
+                        }
+                    }
+                    .decodeSingleOrNull<SB.Home>() != null
+
+                if (!homeExists) {
+                    // Если не существует, создаем новую запись в таблице homes
+                    SB.getSb().postgrest["homes"].insert(
+                        SB.Home(
+                            id = homeId, // Используем сгенерированный UUID
+                            user_id = user.id,
+                            address = address
+                        )
+                    )
+                } else {
+                    // Если существует, обновляем адрес
+                    SB.getSb().postgrest["homes"]
+                        .update({
+                            set("address", address)
+                        }) {
+                            filter {
+                                eq("user_id", user.id)
+                            }
+                        }
+                }
+
+                // Обновляем адрес в таблице users
+                SB.getSb().postgrest["users"]
                     .update({
                         set("address", address)
                     }) {
@@ -95,22 +124,44 @@ class AddressInputActivity : AppCompatActivity() {
                             eq("id", user.id)
                         }
                     }
-                    // If no error, handle success
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@AddressInputActivity, "Адрес успешно сохранен", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this@AddressInputActivity, MainActivity::class.java))
 
+                // Сохраняем адрес в SharedPreferences
+                withContext(Dispatchers.Main) {
+                    getSharedPreferences("SmartHomePrefs", MODE_PRIVATE).edit().apply {
+                        putString("userAddress", address)
+                        apply()
+                    }
+                    Toast.makeText(this@AddressInputActivity, "Адрес успешно сохранен", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this@AddressInputActivity, MainActivity::class.java))
+                    finish()
                 }
 
             } catch (e: Exception) {
-                // Handle any unexpected errors
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@AddressInputActivity, "Ошибка сохранения адреса: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("AddressInputActivity", "Ошибка сохранения адреса", e)
                 }
             }
         }
-
-
-        //Доделать флаги
     }
-}
+
+    private fun checkUserAuthentication() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
+                if (user == null) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@AddressInputActivity, "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@AddressInputActivity, LoginActivity::class.java))
+                        finish()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AddressInputActivity, "Ошибка проверки авторизации: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("AddressInputActivity", "Ошибка проверки авторизации", e)
+                }
+            }
+        }
+    }
+}//г. Омск, ул. Ленина, д. 2

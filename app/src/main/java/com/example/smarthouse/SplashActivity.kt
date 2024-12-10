@@ -14,33 +14,27 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Находим ImageView в разметке
         val splashImageView: ImageView = findViewById(R.id.splashRoundImageView)
-
-        // Запуск анимации вращения
         val rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_animation)
         splashImageView.startAnimation(rotateAnimation)
 
-        // Задержка перед переходом на следующий экран
         Handler().postDelayed({
-            // Проверка на наличие пин-кода и регистрации
             val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
             val isRegistered = sharedPreferences.getBoolean("isRegistered", false)
-            val savedPinCode = sharedPreferences.getString("pin_code", null)
+            val hasPinCode = sharedPreferences.getBoolean("hasPinCode", false)
+            val hasAddress = sharedPreferences.getBoolean("hasAddress", false)
 
-            if (isRegistered && savedPinCode != null) {
-                // Если пользователь зарегистрирован и есть пин-код, переходим на PinCodeActivity
-                val intent = Intent(this, PinCodeActivity::class.java)
-                startActivity(intent)
-            } else if (isRegistered) {
-                // Если пользователь зарегистрирован, но нет пин-кода, переходим на PinCodeActivity
-                val intent = Intent(this, PinCodeActivity::class.java)
-                startActivity(intent)
-            } else {
-                // Иначе переходим на RegistrationActivity
-                val intent = Intent(this, RegistrationActivity::class.java)
-                startActivity(intent)
+            val intent = when {
+                !isRegistered -> Intent(this, RegistrationActivity::class.java)
+                !hasPinCode -> Intent(this, PinCodeActivity::class.java).apply {
+                    putExtra("hasAddress", hasAddress)
+                }
+                !hasAddress -> Intent(this, AddressInputActivity::class.java)
+                else -> Intent(this, PinCodeActivity::class.java).apply {
+                    putExtra("hasAddress", hasAddress)
+                }
             }
+            startActivity(intent)
             finish()
         }, 4000) // 4000 миллисекунд = 4 секунды
     }

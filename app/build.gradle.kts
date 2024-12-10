@@ -54,6 +54,11 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:realtime-kt")
     implementation ("io.ktor:ktor-client-cio:2.0.0")
 
+    // Material Design Components
+    implementation ("com.google.android.material:material:1.4.0") // или более новая версия
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     // Coroutines)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")

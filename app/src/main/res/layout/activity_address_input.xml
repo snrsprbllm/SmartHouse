@@ -54,12 +54,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:padding="8dp"
             android:background="@drawable/input_background"
-            android:padding="18dp"
-
             android:textColorHint="@color/hintColor"
+            app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/button_color"
-            app:boxStrokeWidth="0dp">
+            app:boxStrokeWidth="2dp"
+            app:hintTextAppearance="@style/TextInputLayoutHintTextAppearance">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addressEditText"
@@ -67,9 +68,11 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="Введите адрес"
+                android:textColorHighlight="@color/hintColor"
                 android:textColorHint="@color/hintColor"
+                android:backgroundTint="@color/hintColor"
                 android:inputType="text"
-                android:padding="18dp"
+                android:padding="8dp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>

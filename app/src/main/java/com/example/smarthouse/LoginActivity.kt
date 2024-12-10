@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,8 +25,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailLayout: TextInputLayout
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var loginButton: Button
-
-
+    private lateinit var registerButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,27 +34,29 @@ class LoginActivity : AppCompatActivity() {
         emailLayout = findViewById(R.id.emailLayout)
         passwordLayout = findViewById(R.id.passwordLayout)
         loginButton = findViewById(R.id.loginButton)
+        registerButton = findViewById(R.id.registerButton)
 
         setupTextWatchers()
 
         loginButton.setOnClickListener {
             if (validateFields()) {
-                val email_ = emailLayout.editText?.text.toString().trim()
-                val password_ = passwordLayout.editText?.text.toString().trim()
+                val email = emailLayout.editText?.text.toString().trim()
+                val password = passwordLayout.editText?.text.toString().trim()
 
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
-                        val user = SB.getSb().auth.signInWith(Email) {
-                            email = "example@email.com"
-                            password = "example-password"
+                        SB.getSb().auth.signInWith(Email) {
+                            this.email = email
+                            this.password = password
                         }
-
+                        val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
                         withContext(Dispatchers.Main) {
                             val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
                             sharedPreferences.edit().putBoolean("isRegistered", true).apply()
 
-                            Toast.makeText(this@LoginActivity, "Вход успешен", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@LoginActivity, PinCodeActivity::class.java))
+                            Toast.makeText(this@LoginActivity, "Вход выполнен успешно", Toast.LENGTH_SHORT).show()
+
+                            checkAddressAndRedirect(user.id)
                         }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
@@ -64,6 +67,10 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Ошибка валидации", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        registerButton.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, RegistrationActivity::class.java))
         }
     }
 
@@ -121,12 +128,46 @@ class LoginActivity : AppCompatActivity() {
         if (password.isEmpty()) {
             passwordLayout.error = "Пароль не может быть пустым"
             return false
-        } else if (password.length < 8) {
-            passwordLayout.error = "Пароль должен содержать не менее 8 символов"
-            return false
         } else {
             passwordLayout.error = null
             return true
+        }
+    }
+
+    private fun checkAddressAndRedirect(userId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userData = SB.getSb().postgrest["users"]
+                    .select {
+                        filter {
+                            eq("id", userId)
+                        }
+                    }
+                    .decodeSingleOrNull<SB.User>()
+
+                val hasAddress = userData?.address?.isNotEmpty() ?: false
+
+                withContext(Dispatchers.Main) {
+                    val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
+                    sharedPreferences.edit().putBoolean("hasAddress", hasAddress).apply()
+                    sharedPreferences.edit().putString("userAddress", userData?.address ?: "").apply()
+
+                    Log.d("LoginActivity", "hasAddress: $hasAddress")
+
+                    val intent = when {
+                        !sharedPreferences.getBoolean("hasPinCode", false) -> Intent(this@LoginActivity, PinCodeActivity::class.java)
+                        !hasAddress -> Intent(this@LoginActivity, AddressInputActivity::class.java)
+                        else -> Intent(this@LoginActivity, MainActivity::class.java)
+                    }
+                    intent.putExtra("hasAddress", hasAddress)
+                    startActivity(intent)
+                    finish()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@LoginActivity, "Ошибка проверки адреса: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

@@ -1,18 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Верхний лейаут с заголовком, адресом и категориями -->
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#2A2A37">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Заголовок -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Надпись "Твой дом" -->
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Твой дом"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:layout_marginTop="36dp"
+                android:textStyle="bold" />
+
+            <!-- Иконка настроек -->
+            <ImageView
+                android:id="@+id/settingsIcon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/settingsicon"
+                android:contentDescription="Settings"
+                android:onClick="onSettingsClick" />
+        </RelativeLayout>
+
+        <!-- Адрес пользователя -->
+        <TextView
+            android:id="@+id/addressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="г. Омск, ул. Ленина, д. 24"
+            android:textColor="@color/hintColor"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Категории -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/roomsCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Комнаты"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:onClick="onCategoryClick" />
+
+                <TextView
+                    android:id="@+id/devicesCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Устройства"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:onClick="onCategoryClick" />
+
+                <TextView
+                    android:id="@+id/usersCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Пользователи"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:onClick="onCategoryClick" />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <!-- Список комнат -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/roomsRecyclerView"
+        tools:listitem="@layout/item_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topLayout"
+        android:layout_marginTop="16dp"
+        android:padding="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <!-- Иконка добавления устройства -->
+    <ImageView
+        android:id="@+id/plusIcon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/plusicon"
+        android:contentDescription="Add Device"
+        android:onClick="onAddDeviceClick" />
+
+</RelativeLayout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Верхний лейаут с заголовком и кнопкой назад -->
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#2A2A37">
+
+        <!-- Кнопка назад -->
+        <ImageView
+            android:id="@+id/backIcon"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/backicon"
+            android:contentDescription="Back"
+            android:onClick="onBackClick" />
+
+        <!-- Заголовок -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Добавить комнату"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginTop="36dp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
+
+    <!-- Поле для ввода названия комнаты -->
+    <EditText
+        android:layout_centerHorizontal="true"
+        android:id="@+id/roomNameEditText"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topLayout"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:hint="Название комнаты"
+        android:background="@drawable/input_background"
+        android:textColorHint="@color/hintColor"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <!-- Список типов комнат -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/roomTypesRecyclerView"
+        tools:listitem="@layout/item_room_type"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/roomNameEditText"
+        android:layout_marginTop="16dp"
+        android:padding="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <!-- Кнопка сохранить -->
+    <Button
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/textColorWhite"
+        android:textStyle="bold"
+        android:background="@drawable/button_rounded"
+        app:backgroundTint="@color/buttonColor2"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:id="@+id/saveButton"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:text="Сохранить"
+        android:onClick="onSaveClick" />
+
+</RelativeLayout>

@@ -4,6 +4,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
+import kotlinx.serialization.Serializable
 
 object SB {
     private val supabaseUrl = "https://afgslxlqfpbpctunvood.supabase.co"
@@ -18,7 +19,57 @@ object SB {
             install(Postgrest)
         }
     }
-    public fun getSb(): SupabaseClient {
+
+    fun getSb(): SupabaseClient {
         return supabaseClient
     }
+
+    @Serializable
+    data class User(
+        val id: String,
+        val username: String,
+        val address: String?
+    )
+
+    @Serializable
+    data class Home(
+        val id: Int, // Убедитесь, что id может быть null
+        val user_id: String,
+        val address: String
+    )
+
+    @Serializable
+    data class DeviceType(
+        val id: Int,
+        val name: String,
+        val image_path: String?
+    )
+
+    @Serializable
+    data class RoomType(
+        val id: Int,
+        val name: String,
+        val image_path: String?
+    )
+
+    @Serializable
+    data class Device(
+        val id: Int,
+        val device_id: String,
+        val name: String,
+        val device_type: Int,
+        val room_id: Int,
+        val home_id: Int, // Added this field
+        val ison: Boolean,
+        val value: Int
+    )
+
+    @Serializable
+    data class Room(
+        val id: Int,
+        val name: String,
+        val room_type: Int,
+        val home_id: Int,
+        val image_path: String? // Added this field
+    )
 }

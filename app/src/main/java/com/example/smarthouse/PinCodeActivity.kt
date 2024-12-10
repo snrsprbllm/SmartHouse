@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +15,7 @@ class PinCodeActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private val PIN_CODE_KEY = "pin_code"
+    private val HAS_PIN_CODE_KEY = "hasPinCode" // Добавляем константу
     private val PIN_CODE_LENGTH = 4
     private var pinCode = ""
 
@@ -37,9 +39,12 @@ class PinCodeActivity : AppCompatActivity() {
         indicator4 = findViewById(R.id.indicator4)
         exitButton = findViewById(R.id.exitButton)
 
-        val savedPinCode = sharedPreferences.getString(PIN_CODE_KEY, null)
-        if (savedPinCode != null) {
-            // Если пин-код уже есть, обновляем надпись и вид кнопки
+        val hasPinCode = sharedPreferences.getBoolean(HAS_PIN_CODE_KEY, false) // Используем константу
+        val hasAddress = intent.getBooleanExtra("hasAddress", false)
+
+        Log.d("PinCodeActivity", "hasAddress: $hasAddress, hasPinCode: $hasPinCode")
+
+        if (hasPinCode) {
             titleTextView.text = "Умный дом"
             exitButton.visibility = MaterialButton.VISIBLE
         } else {
@@ -76,10 +81,10 @@ class PinCodeActivity : AppCompatActivity() {
             updateIndicators()
 
             if (pinCode.length == PIN_CODE_LENGTH) {
-                if (sharedPreferences.getString(PIN_CODE_KEY, null) == null) {
-                    savePinCode()
-                } else {
+                if (sharedPreferences.getBoolean(HAS_PIN_CODE_KEY, false)) { // Используем константу
                     checkPinCode()
+                } else {
+                    savePinCode()
                 }
             }
         }
@@ -96,19 +101,25 @@ class PinCodeActivity : AppCompatActivity() {
 
     private fun savePinCode() {
         sharedPreferences.edit().putString(PIN_CODE_KEY, pinCode).apply()
+        sharedPreferences.edit().putBoolean(HAS_PIN_CODE_KEY, true).apply() // Используем константу
         pinCode = ""
         updateIndicators()
-        startActivity(Intent(this, AddressInputActivity::class.java))
+
+        val hasAddress = intent.getBooleanExtra("hasAddress", false)
+        Log.d("PinCodeActivity", "Saving pin code, hasAddress: $hasAddress")
+        val nextActivity = if (hasAddress) MainActivity::class.java else AddressInputActivity::class.java
+        startActivity(Intent(this, nextActivity))
         finish()
     }
 
     private fun checkPinCode() {
         if (pinCode == sharedPreferences.getString(PIN_CODE_KEY, "")) {
-            // Переход на главный экран
-            startActivity(Intent(this, MainActivity::class.java))
+            val hasAddress = intent.getBooleanExtra("hasAddress", false)
+            Log.d("PinCodeActivity", "Checking pin code, hasAddress: $hasAddress")
+            val nextActivity = if (hasAddress) MainActivity::class.java else AddressInputActivity::class.java
+            startActivity(Intent(this, nextActivity))
             finish()
         } else {
-            // Ошибка ввода пин-кода
             Toast.makeText(this, "Неверный пин-код", Toast.LENGTH_SHORT).show()
             pinCode = ""
             updateIndicators()
