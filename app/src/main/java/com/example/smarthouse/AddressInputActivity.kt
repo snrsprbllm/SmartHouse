@@ -82,8 +82,8 @@ class AddressInputActivity : AppCompatActivity() {
                 val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
                     ?: throw Exception("Пользователь не авторизован")
 
-                // Генерируем случайный UUID для идентификатора дома
-                val homeId = generateRandomHomeId()
+                // Генерируем случайный ID для дома
+                val homeId = generateRandomId()
 
                 // Проверяем, существует ли уже запись в таблице homes для данного пользователя
                 val homeExists = SB.getSb().postgrest["homes"]
@@ -98,7 +98,7 @@ class AddressInputActivity : AppCompatActivity() {
                     // Если не существует, создаем новую запись в таблице homes
                     SB.getSb().postgrest["homes"].insert(
                         SB.Home(
-                            id = homeId, // Используем сгенерированный UUID
+                            id = homeId, // Используем сгенерированный случайный ID
                             user_id = user.id,
                             address = address
                         )
@@ -129,10 +129,11 @@ class AddressInputActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     getSharedPreferences("SmartHomePrefs", MODE_PRIVATE).edit().apply {
                         putString("userAddress", address)
+                        putBoolean("hasAddress", true) // Устанавливаем флаг hasAddress
                         apply()
                     }
                     Toast.makeText(this@AddressInputActivity, "Адрес успешно сохранен", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@AddressInputActivity, MainActivity::class.java))
+                    startActivity(Intent(this@AddressInputActivity, PinCodeActivity::class.java))
                     finish()
                 }
 
@@ -144,7 +145,6 @@ class AddressInputActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun checkUserAuthentication() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -163,5 +163,9 @@ class AddressInputActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun generateRandomId(): Int {
+        return Random.nextInt(100000, 999999)
     }
 }//г. Омск, ул. Ленина, д. 2

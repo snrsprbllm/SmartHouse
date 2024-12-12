@@ -59,9 +59,9 @@ object SB {
         val name: String,
         val device_type: Int,
         val room_id: Int,
-        val home_id: Int, // Added this field
-        val ison: Boolean,
-        val value: Int
+        val home_id: Int,
+        val ison: Boolean, // Добавлено поле для состояния устройства
+        val value: Int // Добавлено поле для значения
     )
 
     @Serializable

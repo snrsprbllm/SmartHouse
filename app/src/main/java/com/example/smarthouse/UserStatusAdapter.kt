@@ -36,7 +36,7 @@ class UserStatusAdapter(private val userStatusList: List<String>) : RecyclerView
 
         fun bind(userStatus: String, isSelected: Boolean) {
             // Загрузка изображения и имени статуса пользователя
-            // imageView.setImageResource(R.drawable.usericon)
+            imageView.setImageResource(R.drawable.usericon)
             nameTextView.text = userStatus
             itemView.setBackgroundResource(if (isSelected) R.drawable.bottom_border else R.drawable.button_rounded)
         }

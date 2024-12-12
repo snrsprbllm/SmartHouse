@@ -1,5 +1,6 @@
 package com.example.smarthouse
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -17,7 +18,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.regex.Pattern
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -25,7 +25,7 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var usernameLayout: TextInputLayout
     private lateinit var registerButton: Button
-    private lateinit var loginButton: Button // Добавляем кнопку "Вход"
+    private lateinit var loginButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +33,9 @@ class RegistrationActivity : AppCompatActivity() {
 
         emailLayout = findViewById(R.id.emailLayout)
         passwordLayout = findViewById(R.id.passwordLayout)
+        usernameLayout = findViewById(R.id.usernameLayout)
         registerButton = findViewById(R.id.registerButton)
-        loginButton = findViewById(R.id.loginButton) // Инициализируем кнопку "Вход"
-        usernameLayout = findViewById(R.id.usernameLayout) // Инициализируем кнопку "Вход"
+        loginButton = findViewById(R.id.loginButton)
 
         setupTextWatchers()
 
@@ -45,17 +45,18 @@ class RegistrationActivity : AppCompatActivity() {
                 val password = passwordLayout.editText?.text.toString().trim()
                 val username = usernameLayout.editText?.text.toString().trim()
 
-
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
+                        // Регистрация пользователя
                         SB.getSb().auth.signUpWith(Email) {
                             this.email = email
                             this.password = password
-
                         }
 
+                        // Получение текущего пользователя
                         val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
-                        Log.e("!!!!!",""+ user.id)
+                        Log.e("!!!!!", "" + user.id)
+
                         // Добавление имени пользователя в таблицу
                         val userData = mapOf(
                             "id" to user.id,
@@ -63,10 +64,11 @@ class RegistrationActivity : AppCompatActivity() {
                         )
                         SB.getSb().postgrest["users"].insert(userData)
 
-
-
-
+                        // Сохранение флага isRegistered в SharedPreferences
                         withContext(Dispatchers.Main) {
+                            val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
+                            sharedPreferences.edit().putBoolean("isRegistered", true).apply()
+
                             Toast.makeText(this@RegistrationActivity, "Регистрация успешна", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this@RegistrationActivity, PinCodeActivity::class.java))
                             finish()
@@ -82,7 +84,6 @@ class RegistrationActivity : AppCompatActivity() {
             }
         }
 
-        // Обработчик для кнопки "Вход"
         loginButton.setOnClickListener {
             startActivity(Intent(this@RegistrationActivity, LoginActivity::class.java))
         }

@@ -73,13 +73,15 @@ class MainActivity : AppCompatActivity() {
         val titleTextView = findViewById<TextView>(R.id.titleTextView)
         val addressTextView = findViewById<TextView>(R.id.addressTextView)
         titleTextView.text = "Твой дом"
-        loadUserAddress()
+
+        // Загрузка адреса из SharedPreferences
+        loadUserAddress(addressTextView)
 
         // Настройка иконок и категорий
         val settingsIcon = findViewById<ImageView>(R.id.settingsIcon)
         settingsIcon.setOnClickListener {
             // Заглушка для перехода в профиль пользователя
-            // startActivity(Intent(this, ProfileActivity::class.java))
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
 
         val plusIcon = findViewById<ImageView>(R.id.plusIcon)
@@ -108,14 +110,17 @@ class MainActivity : AppCompatActivity() {
             updateCategory(usersCategory, usersList)
             selectedCategory = R.id.usersCategory
         }
+    }
 
-        getCurrentUserAddress(addressTextView)
+    private fun loadUserAddress(addressTextView: TextView) {
+        val address = sharedPreferences.getString("userAddress", "Адрес не указан")
+        addressTextView.text = address
     }
 
     private fun loadRooms() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val roomsResult = SB.getSb().postgrest["rooms"].select().decodeList<Room>()
+                val roomsResult = SB.getSb().postgrest["rooms"].select().decodeList<SB.Room>()
                 withContext(Dispatchers.Main) {
                     roomsList.clear()
                     roomsList.addAll(roomsResult)
@@ -263,7 +268,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onSettingsClick(view: View) {
         // Заглушка для перехода в настройки
-        // startActivity(Intent(this, SettingsActivity::class.java))
+        startActivity(Intent(this, ProfileActivity::class.java))
     }
 
     fun onCategoryClick(view: View) {

@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 class AddRoomActivity : AppCompatActivity() {
 
@@ -85,9 +86,9 @@ class AddRoomActivity : AppCompatActivity() {
                     val homeId = if (homes.isNotEmpty()) {
                         homes.first().id
                     } else {
-                        // Если дома нет, создаем новый дом
+                        // Если дома нет, создаем новый дом с рандомным ID
                         val newHome = SB.Home(
-                            id = 0, // Устанавливаем id в 0, чтобы база данных сама сгенерировала значение
+                            id = generateRandomId(), // Генерируем случайный ID
                             user_id = user.id,
                             address = "Default Address" // Установите адрес дома по умолчанию
                         )
@@ -97,7 +98,7 @@ class AddRoomActivity : AppCompatActivity() {
                     // Проверяем, что homeId не null
                     if (homeId != null) {
                         val room = Room(
-                            id = 0, // ID будет автоматически сгенерирован базой данных
+                            id = generateRandomId(), // Генерируем случайный ID для комнаты
                             name = roomName,
                             room_type = selectedRoomType.id,
                             home_id = homeId,
@@ -129,5 +130,9 @@ class AddRoomActivity : AppCompatActivity() {
 
     fun onBackClick(view: View) {
         finish()
+    }
+
+    fun generateRandomId(): Int {
+        return Random.nextInt(100000, 999999)
     }
 }

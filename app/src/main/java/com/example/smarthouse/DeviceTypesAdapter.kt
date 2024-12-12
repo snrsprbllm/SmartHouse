@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -39,12 +40,14 @@ class DeviceTypesAdapter(private val deviceTypesList: List<DeviceType>) : Recycl
     inner class DeviceTypeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.deviceTypeImageView)
         private val nameTextView: TextView = itemView.findViewById(R.id.deviceTypeNameTextView)
+        private val stateCheckBox: CheckBox = itemView.findViewById(R.id.deviceStateCheckBox) // Добавлен чекбокс
 
         fun bind(deviceType: DeviceType, isSelected: Boolean) {
             deviceType.image_path?.let {
                 ImageDownloadTask(WeakReference(imageView)).execute(it)
             }
             nameTextView.text = deviceType.name
+            stateCheckBox.isChecked = false // Устанавливаем состояние чекбокса по умолчанию (выключено)
             itemView.setBackgroundResource(if (isSelected) R.drawable.bottom_border else R.drawable.button_rounded)
         }
     }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Верхний лейаут с заголовком и кнопкой назад -->
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#2A2A37"
+        android:layout_alignParentTop="true">
+
+        <!-- Кнопка назад -->
+        <ImageView
+            android:id="@+id/backIcon"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/backicon"
+            android:contentDescription="Back"
+            android:onClick="onBackClick" />
+
+        <!-- Заголовок "Профиль" -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Профиль"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginStart="16dp" />
+
+        <!-- Картинка пользователя (usericon) -->
+        <ImageView
+            android:id="@+id/userImageView"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/usericon"
+            android:contentDescription="User Image"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
+
+    <!-- Контейнер для текстовых полей и кнопок -->
+    <LinearLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+
+        android:layout_centerInParent="true"
+        android:padding="16dp">
+
+        <!-- Поле для ввода имени пользователя -->
+        <EditText
+            android:id="@+id/usernameEditText"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:hint="Имя пользователя"
+            android:background="@drawable/input_background"
+            android:textColorHint="@color/hintColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Поле для ввода email -->
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:hint="Email"
+            android:background="@drawable/input_background"
+            android:textColorHint="@color/hintColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Поле для ввода адреса -->
+        <EditText
+            android:id="@+id/addressEditText"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:hint="Адрес"
+            android:background="@drawable/input_background"
+            android:textColorHint="@color/hintColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Кнопка сохранить -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:text="Сохранить"
+            android:textColor="@color/textColorWhite"
+            android:textStyle="bold"
+            android:background="@drawable/button_rounded"
+            app:backgroundTint="@color/buttonColor2"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Кнопка удалить -->
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:text="Удалить аккаунт"
+            android:textColor="@color/textColorWhite"
+            android:textStyle="bold"
+            android:background="@drawable/button_rounded"
+            app:backgroundTint="@color/buttonColor2"
+            android:textSize="16sp"
+            android:padding="12dp" />
+    </LinearLayout>
+
+</RelativeLayout>

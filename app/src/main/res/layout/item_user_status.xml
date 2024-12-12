@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="center_horizontal"
     android:padding="16dp"
-    android:background="@drawable/button_rounded">
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/input_background">
 
+    <!-- Изображение статуса пользователя -->
     <ImageView
         android:id="@+id/userStatusImageView"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/usericon"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginLeft="36dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/usericon" />
 
+    <!-- Название статуса пользователя -->
     <TextView
         android:id="@+id/userStatusNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Статус пользователя"
+        app:layout_constraintStart_toEndOf="@id/userStatusImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="58dp"
+        android:text="User Status Name"
         android:textColor="@color/button_color"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

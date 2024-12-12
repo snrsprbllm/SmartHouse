@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
@@ -15,11 +13,11 @@ class PinCodeActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private val PIN_CODE_KEY = "pin_code"
-    private val HAS_PIN_CODE_KEY = "hasPinCode" // Добавляем константу
+    private val HAS_PIN_CODE_KEY = "hasPinCode"
     private val PIN_CODE_LENGTH = 4
     private var pinCode = ""
 
-    private lateinit var titleTextView: TextView
+    private lateinit var titleTextView: android.widget.TextView
     private lateinit var indicator1: ImageView
     private lateinit var indicator2: ImageView
     private lateinit var indicator3: ImageView
@@ -39,10 +37,8 @@ class PinCodeActivity : AppCompatActivity() {
         indicator4 = findViewById(R.id.indicator4)
         exitButton = findViewById(R.id.exitButton)
 
-        val hasPinCode = sharedPreferences.getBoolean(HAS_PIN_CODE_KEY, false) // Используем константу
-        val hasAddress = intent.getBooleanExtra("hasAddress", false)
-
-        Log.d("PinCodeActivity", "hasAddress: $hasAddress, hasPinCode: $hasPinCode")
+        val hasPinCode = sharedPreferences.getBoolean(HAS_PIN_CODE_KEY, false)
+        val hasAddress = sharedPreferences.getBoolean("hasAddress", false)
 
         if (hasPinCode) {
             titleTextView.text = "Умный дом"
@@ -73,6 +69,12 @@ class PinCodeActivity : AppCompatActivity() {
         exitButton.setOnClickListener {
             finish()
         }
+
+        // Проверка адреса
+        if (!hasAddress) {
+            startActivity(Intent(this, AddressInputActivity::class.java))
+            finish()
+        }
     }
 
     private fun onNumberButtonClick(number: String) {
@@ -81,7 +83,7 @@ class PinCodeActivity : AppCompatActivity() {
             updateIndicators()
 
             if (pinCode.length == PIN_CODE_LENGTH) {
-                if (sharedPreferences.getBoolean(HAS_PIN_CODE_KEY, false)) { // Используем константу
+                if (sharedPreferences.getBoolean(HAS_PIN_CODE_KEY, false)) {
                     checkPinCode()
                 } else {
                     savePinCode()
@@ -101,12 +103,11 @@ class PinCodeActivity : AppCompatActivity() {
 
     private fun savePinCode() {
         sharedPreferences.edit().putString(PIN_CODE_KEY, pinCode).apply()
-        sharedPreferences.edit().putBoolean(HAS_PIN_CODE_KEY, true).apply() // Используем константу
+        sharedPreferences.edit().putBoolean(HAS_PIN_CODE_KEY, true).apply()
         pinCode = ""
         updateIndicators()
 
-        val hasAddress = intent.getBooleanExtra("hasAddress", false)
-        Log.d("PinCodeActivity", "Saving pin code, hasAddress: $hasAddress")
+        val hasAddress = sharedPreferences.getBoolean("hasAddress", false)
         val nextActivity = if (hasAddress) MainActivity::class.java else AddressInputActivity::class.java
         startActivity(Intent(this, nextActivity))
         finish()
@@ -114,8 +115,7 @@ class PinCodeActivity : AppCompatActivity() {
 
     private fun checkPinCode() {
         if (pinCode == sharedPreferences.getString(PIN_CODE_KEY, "")) {
-            val hasAddress = intent.getBooleanExtra("hasAddress", false)
-            Log.d("PinCodeActivity", "Checking pin code, hasAddress: $hasAddress")
+            val hasAddress = sharedPreferences.getBoolean("hasAddress", false)
             val nextActivity = if (hasAddress) MainActivity::class.java else AddressInputActivity::class.java
             startActivity(Intent(this, nextActivity))
             finish()

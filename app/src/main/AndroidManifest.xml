@@ -12,17 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHouse">
         <activity
-            android:name=".AddUserActivity"
+            android:name=".ProfileActivity"
             android:exported="false"
             android:theme="@style/SplashTheme"/>
+        <activity
+            android:name=".AddUserActivity"
+            android:exported="false"
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".AddDeviceActivity"
             android:exported="false"
-            android:theme="@style/SplashTheme"/>
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".AddRoomActivity"
             android:exported="false"
-            android:theme="@style/SplashTheme"/>
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".AddressInputActivity"
             android:exported="false"

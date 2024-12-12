@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smarthouse.SB.Device
 import com.example.smarthouse.SB.DeviceType
 import com.example.smarthouse.SB.Room
+import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 class AddDeviceActivity : AppCompatActivity() {
 
@@ -27,7 +29,7 @@ class AddDeviceActivity : AppCompatActivity() {
     private lateinit var deviceTypesRecyclerView: RecyclerView
     private lateinit var deviceTypesAdapter: DeviceTypesAdapter
     private lateinit var deviceTypesList: MutableList<DeviceType>
-    private lateinit var roomsList: MutableList<Room>
+    private var roomsList: MutableList<Room> = mutableListOf() // Инициализация здесь
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,9 @@ class AddDeviceActivity : AppCompatActivity() {
         deviceTypesAdapter = DeviceTypesAdapter(deviceTypesList)
         deviceTypesRecyclerView.adapter = deviceTypesAdapter
         deviceTypesRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Скрытие чекбокса на экране добавления устройства
+        deviceTypesRecyclerView.visibility = View.GONE
 
         loadDeviceTypes()
         loadRooms()
@@ -71,10 +76,22 @@ class AddDeviceActivity : AppCompatActivity() {
     private fun loadRooms() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val roomsResult = SB.getSb().postgrest["rooms"].select().decodeList<Room>()
+                // Получение текущего пользователя
+                val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
+                    ?: throw Exception("Пользователь не авторизован")
+
+                // Получение комнат, принадлежащих текущему пользователю
+                val roomsResult = SB.getSb().postgrest["rooms"].select {
+                    filter {
+                        eq("home_id", user.id.toInt()) // Фильтр по home_id, который связан с пользователем
+                    }
+                }.decodeList<Room>()
+
                 withContext(Dispatchers.Main) {
                     roomsList.clear()
                     roomsList.addAll(roomsResult)
+
+                    // Настройка AutoCompleteTextView
                     val roomNames = roomsList.map { it.name }.toTypedArray()
                     val adapter = ArrayAdapter(this@AddDeviceActivity, android.R.layout.simple_dropdown_item_1line, roomNames)
                     roomNameAutoCompleteTextView.setAdapter(adapter)
@@ -95,17 +112,17 @@ class AddDeviceActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val selectedDeviceType = deviceTypesList[deviceTypesAdapter.selectedPosition]
-                    val selectedRoom = roomsList.find { it.name == roomName }
+                    val selectedRoom = roomsList.find { it.name.equals(roomName, ignoreCase = true) }
                     if (selectedRoom != null) {
                         val device = Device(
-                            id = 0, // ID будет автоматически сгенерирован базой данных
+                            id = generateRandomId(), // Генерируем случайный ID для устройства
                             device_id = "device_id", // Пример значения
                             name = deviceName,
                             device_type = selectedDeviceType.id,
                             room_id = selectedRoom.id,
-                            home_id = 1, // Пример значения
-                            ison = false, // Пример значения
-                            value = 0 // Пример значения
+                            home_id = selectedRoom.home_id,
+                            ison = false, // Устанавливаем состояние устройства
+                            value = 100 // Устанавливаем значение по умолчанию
                         )
 
                         SB.getSb().postgrest["devices"].insert(device)
@@ -129,6 +146,10 @@ class AddDeviceActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Название устройства и комнаты не могут быть пустыми", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun generateRandomId(): Int {
+        return Random.nextInt(100000, 999999)
     }
 
     fun onBackClick(view: View) {

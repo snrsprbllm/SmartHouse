@@ -45,17 +45,19 @@ class LoginActivity : AppCompatActivity() {
 
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
+                        // Вход пользователя
                         SB.getSb().auth.signInWith(Email) {
                             this.email = email
                             this.password = password
                         }
+
+                        // Получение текущего пользователя
                         val user = SB.getSb().auth.retrieveUserForCurrentSession(updateSession = true)
                         withContext(Dispatchers.Main) {
                             val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
                             sharedPreferences.edit().putBoolean("isRegistered", true).apply()
 
-                            Toast.makeText(this@LoginActivity, "Вход выполнен успешно", Toast.LENGTH_SHORT).show()
-
+                            // Проверка адреса и перенаправление
                             checkAddressAndRedirect(user.id)
                         }
                     } catch (e: Exception) {
@@ -99,9 +101,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateButtonState() {
         if (validateFields()) {
-            loginButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.buttonColor1)
+            loginButton.isEnabled = true
         } else {
-            loginButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.buttonColor2)
+            loginButton.isEnabled = false
         }
     }
 
@@ -137,6 +139,7 @@ class LoginActivity : AppCompatActivity() {
     private fun checkAddressAndRedirect(userId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // Получение данных пользователя
                 val userData = SB.getSb().postgrest["users"]
                     .select {
                         filter {

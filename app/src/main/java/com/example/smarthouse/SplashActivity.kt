@@ -18,24 +18,25 @@ class SplashActivity : AppCompatActivity() {
         val rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_animation)
         splashImageView.startAnimation(rotateAnimation)
 
+        // Задержка для отображения SplashScreen
         Handler().postDelayed({
+            // Проверка состояния пользователя
             val sharedPreferences = getSharedPreferences("SmartHomePrefs", Context.MODE_PRIVATE)
             val isRegistered = sharedPreferences.getBoolean("isRegistered", false)
             val hasPinCode = sharedPreferences.getBoolean("hasPinCode", false)
             val hasAddress = sharedPreferences.getBoolean("hasAddress", false)
 
+            // Определение следующего экрана
             val intent = when {
                 !isRegistered -> Intent(this, RegistrationActivity::class.java)
                 !hasPinCode -> Intent(this, PinCodeActivity::class.java).apply {
                     putExtra("hasAddress", hasAddress)
                 }
                 !hasAddress -> Intent(this, AddressInputActivity::class.java)
-                else -> Intent(this, PinCodeActivity::class.java).apply {
-                    putExtra("hasAddress", hasAddress)
-                }
+                else -> Intent(this, PinCodeActivity::class.java)
             }
             startActivity(intent)
             finish()
-        }, 4000) // 4000 миллисекунд = 4 секунды
+        }, 4000) // 2000 миллисекунд = 2 секунды
     }
 }
